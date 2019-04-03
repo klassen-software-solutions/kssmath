@@ -13,6 +13,11 @@
 		AACAA75E22542BFF0005F45E /* version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AACAA75D22542BFF0005F45E /* version.cpp */; };
 		AACAA76122542C280005F45E /* ksstest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AACAA76022542C280005F45E /* ksstest.cpp */; };
 		AACAA76322542C5D0005F45E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AACAA76222542C5D0005F45E /* main.cpp */; };
+		AACAA76622542D3E0005F45E /* gcd.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AACAA76422542D3E0005F45E /* gcd.hpp */; };
+		AACAA76722542D3E0005F45E /* gcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AACAA76522542D3E0005F45E /* gcd.cpp */; };
+		AACAA76A22542D560005F45E /* _contract.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AACAA76822542D560005F45E /* _contract.hpp */; };
+		AACAA76B22542D560005F45E /* _contract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AACAA76922542D560005F45E /* _contract.cpp */; };
+		AACAA76D22542EA40005F45E /* gcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AACAA76C22542EA40005F45E /* gcd.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +58,11 @@
 		AACAA75F22542C280005F45E /* ksstest.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ksstest.hpp; sourceTree = "<group>"; };
 		AACAA76022542C280005F45E /* ksstest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ksstest.cpp; sourceTree = "<group>"; };
 		AACAA76222542C5D0005F45E /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		AACAA76422542D3E0005F45E /* gcd.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = gcd.hpp; sourceTree = "<group>"; };
+		AACAA76522542D3E0005F45E /* gcd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gcd.cpp; sourceTree = "<group>"; };
+		AACAA76822542D560005F45E /* _contract.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = _contract.hpp; sourceTree = "<group>"; };
+		AACAA76922542D560005F45E /* _contract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = _contract.cpp; sourceTree = "<group>"; };
+		AACAA76C22542EA40005F45E /* gcd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gcd.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +121,10 @@
 		AACAA74222542B050005F45E /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				AACAA76922542D560005F45E /* _contract.cpp */,
+				AACAA76822542D560005F45E /* _contract.hpp */,
+				AACAA76522542D3E0005F45E /* gcd.cpp */,
+				AACAA76422542D3E0005F45E /* gcd.hpp */,
 				AACAA74522542B050005F45E /* version.cpp */,
 				AACAA74622542B050005F45E /* version.hpp */,
 			);
@@ -127,6 +141,7 @@
 		AACAA75C22542BFF0005F45E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				AACAA76C22542EA40005F45E /* gcd.cpp */,
 				AACAA76022542C280005F45E /* ksstest.cpp */,
 				AACAA75F22542C280005F45E /* ksstest.hpp */,
 				AACAA76222542C5D0005F45E /* main.cpp */,
@@ -142,7 +157,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AACAA76A22542D560005F45E /* _contract.hpp in Headers */,
 				AACAA74B22542B050005F45E /* version.hpp in Headers */,
+				AACAA76622542D3E0005F45E /* gcd.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,7 +263,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AACAA76722542D3E0005F45E /* gcd.cpp in Sources */,
 				AACAA74A22542B050005F45E /* version.cpp in Sources */,
+				AACAA76B22542D560005F45E /* _contract.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +275,7 @@
 			files = (
 				AACAA75E22542BFF0005F45E /* version.cpp in Sources */,
 				AACAA76122542C280005F45E /* ksstest.cpp in Sources */,
+				AACAA76D22542EA40005F45E /* gcd.cpp in Sources */,
 				AACAA76322542C5D0005F45E /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
