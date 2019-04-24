@@ -4,15 +4,17 @@
 //
 //  Created by Steven W. Klassen on 2013-01-11.
 //  Copyright (c) 2013 Klassen Software Solutions. All rights reserved.
+//  Licensing follows the MIT License.
 //
 
-#include <iostream>
-#include <kss/math/gcd.hpp>
-//#include <kss/math/utility.h>
 #include "ksstest.hpp"
 
+#include <kss/math/gcd.hpp>
+
+#include <iostream>
+
 using namespace std;
-using namespace kss::math::numerical;
+using namespace kss::math::num;
 using namespace kss::test;
 
 namespace {
@@ -25,7 +27,7 @@ namespace {
     }
 }
 
-static TestSuite ts("numerical::gcd", {
+static TestSuite ts("num::gcd", {
     make_pair("gcd", [] {
         // test greatest_common_divisor
         test_gcd<unsigned short>();

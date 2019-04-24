@@ -4,12 +4,13 @@
 //
 //  Created by Steven W. Klassen on 2015-01-04.
 //  Copyright (c) 2015 Klassen Software Solutions. All rights reserved.
+//  Licensing follows the MIT License.
 //
 
 #ifndef kssmath_gcd_hpp
 #define kssmath_gcd_hpp
 
-namespace kss { namespace math { namespace numerical {
+namespace kss { namespace math { namespace num {
 
     /*!
       Greatest common divisor. This will return the gcd of the two arguments.

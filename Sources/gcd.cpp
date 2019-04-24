@@ -4,11 +4,12 @@
 //
 //  Created by Steven W. Klassen on 2015-01-05.
 //  Copyright (c) 2015 Klassen Software Solutions. All rights reserved.
+//  Licensing follows the MIT License.
 //
 
-#include <cassert>
-
 #include "gcd.hpp"
+
+#include <cassert>
 
 
 using namespace std;
@@ -71,19 +72,19 @@ namespace {
 }
 
 
-unsigned short kss::math::numerical::gcd(unsigned short u, unsigned short v) noexcept {
+unsigned short kss::math::num::gcd(unsigned short u, unsigned short v) noexcept {
     return _gcd<unsigned short>(u, v);
 }
 
-unsigned int kss::math::numerical::gcd(unsigned int u, unsigned int v) noexcept {
+unsigned int kss::math::num::gcd(unsigned int u, unsigned int v) noexcept {
     return _gcd<unsigned int>(u, v);
 }
 
-unsigned long kss::math::numerical::gcd(unsigned long u, unsigned long v) noexcept {
+unsigned long kss::math::num::gcd(unsigned long u, unsigned long v) noexcept {
     return _gcd<unsigned long>(u, v);
 }
 
-unsigned long long kss::math::numerical::gcd(unsigned long long u, unsigned long long v) noexcept {
+unsigned long long kss::math::num::gcd(unsigned long long u, unsigned long long v) noexcept {
     return _gcd<unsigned long long>(u, v);
 }
 

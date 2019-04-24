@@ -9,12 +9,12 @@
 // "borrowed" from ksscontract
 //
 
+#include "_contract.hpp"
+
 #include <cassert>
 #include <exception>
 #include <iostream>
 #include <stdexcept>
-
-#include "_contract.hpp"
 
 using namespace std;
 using namespace kss::math::_private::contract;

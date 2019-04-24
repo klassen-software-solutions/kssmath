@@ -6,14 +6,15 @@
 //  Licensing follows the MIT License.
 //
 
-#include <kss/math/version.hpp>
 #include "ksstest.hpp"
+
+#include <kss/math/version.hpp>
 
 using namespace std;
 using namespace kss::test;
 
 
-static TestSuite ts("version", {
+static TestSuite ts("::version", {
     make_pair("version", [] {
         KSS_ASSERT(!kss::math::version().empty());
         KSS_ASSERT(!kss::math::license().empty());
