@@ -12,11 +12,8 @@
 
 #include "vector.hpp"
 
-#include <cmath>
-#include <initializer_list>
-#include <stdexcept>
-#include <string>
-#include <valarray>
+#include <algorithm>
+#include <array>
 
 namespace kss { namespace math { namespace geom {
 
@@ -48,8 +45,11 @@ namespace kss { namespace math { namespace geom {
         /*!
          Construct a point.
          */
-        explicit Point(Number val = Number()) : _values(val, Dim) {}
-        Point(const Point& p) : _values(p._values) {}
+        explicit Point(Number val = Number()) {
+            _values.fill(val);
+        }
+
+        Point(const Point&) = default;
         Point(Point&&) = default;
         Point& operator=(Point&&) = default;
         ~Point() = default;
@@ -61,18 +61,28 @@ namespace kss { namespace math { namespace geom {
             return *this;
         }
 
-        explicit Point(std::initializer_list<Number> il) : _values(il) {
+        explicit Point(const std::array<Number, Dim>& a) {
+            _values = a;
+        }
+
+        explicit Point(std::array<Number, Dim>&& a) {
+            _values = std::move(a);
+        }
+
+        explicit Point(std::initializer_list<Number> il) {
             if (il.size() != Dim) {
                 throw std::invalid_argument("initializer list must have "
                                             + std::to_string(Dim)
                                             + " values");
             }
+            std::copy_n(il.begin(), Dim, _values.begin());
         }
 
-        explicit Point(const Number* ptr) : _values(ptr, Dim) {
+        explicit Point(const Number* ptr) {
             if (!ptr) {
                 throw std::invalid_argument("ptr must not be null");
             }
+            std::copy_n(ptr, Dim, _values.begin());
         }
 
         /*!
@@ -83,35 +93,29 @@ namespace kss { namespace math { namespace geom {
         const Number& operator[](size_t i) const noexcept    { return _values[i]; }
 
         /*!
-         Returns a reference to the underlying values.
+         Returns a reference to the underlying array.
          */
-        std::valarray<Number>&          values() noexcept       { return _values; }
-        const std::valarray<Number>&    values() const noexcept { return _values; }
-
-        kss::math::la::VectorVA<Number, Dim>&       vector() noexcept       { return _vector; }
-        const kss::math::la::VectorVA<Number, Dim>& vector() const noexcept { return _vector; }
+        std::array<Number, Dim>&        values() noexcept       { return _values; }
+        const std::array<Number, Dim>&  values() const noexcept { return _values; }
 
         /*!
          Determine the equality of two points. They will be equal if and only if
          all their values are equal.
          */
         inline bool operator==(const Point& p) const noexcept {
-            //return (_vector == p._vector);
-            return true;
+            return (_values == p._values);
         }
 
         inline bool operator!=(const Point& p) const noexcept {
-            return _vector != p._vector;
+            return _values != p._values;
         }
 
     private:
-        std::valarray<Number>                   _values;
-        kss::math::la::VectorVA<Number, Dim>    _vector = kss::math::la::VectorVA<Number, Dim>(_values);
+        std::array<Number, Dim> _values;
     };
 
     template<class Number, unsigned Dim>
     const Point<Number, Dim> Point<Number, Dim>::origin;
-
 
     /*!
      Returns the distance between two points. For good results you need that
@@ -120,10 +124,9 @@ namespace kss { namespace math { namespace geom {
      @throws std::overflow_error if the values are too large to compute
      */
     template <class Result, class Number, unsigned Dim>
-    Result distance(const Point<Number, Dim>& a, const Point<Number, Dim>& b) {
-        std::valarray<Number> diffs = b.values() - a.values();
-        auto vec = kss::math::la::VectorVA<Number, Dim>(diffs);
-        return std::sqrt(kss::math::la::dotProduct<Result>(vec, vec));
+    inline Result distance(const Point<Number, Dim>& a, const Point<Number, Dim>& b) {
+        const auto diffs = kss::math::la::operator-(b.values(), a.values());
+        return kss::math::la::norm<Result>(diffs);
     }
 
     /*!

@@ -10,133 +10,265 @@
 #ifndef kssmath_vector_hpp
 #define kssmath_vector_hpp
 
+#include <algorithm>
 #include <array>
-#include <cmath>
-#include <limits>
-#include <sstream>
+#include <iterator>
 #include <stdexcept>
-#include <string>
-#include <type_traits>
 #include <valarray>
-#include <vector>
 
 namespace kss { namespace math { namespace la {
+
+    /** \file
+     Definition of the VectorLike types.
+     A Vector in our terminology is an ordered array-like object that supports the
+     following methods:
+     - VectorLike& operator=(const VectorLike&);
+     - constexpr size_t size() noexcept;
+     - reference operator[] (size_t n);
+     - const_reference operator[] (size_t n);
+     - iterator begin();
+     - iterator end();
+     - const_iterator begin() const;
+     - const_iterator end() const;
+
+     The std::array class already fits this description. std::vector comes close
+     except that its size() method is not a constexpr. (Some - but not all - of the
+     VectorLike methods will work with it anyway.) We provide an additional
+     implementation based on a reference to an underlying std::valarray combined
+     with a slice.
+
+     We then provide a number of methods that may operator on VectorLike objects.
+     */
 
     namespace _private {
         inline bool isValidSlice(size_t arrayLen, const std::slice& s) noexcept {
             return (s.start() + ((s.size()-1) * s.stride()) <= arrayLen);
         }
+
+        template <class T>
+        struct AddRelOps {
+            inline bool operator!=(const T& t) const noexcept {
+                const T* self = static_cast<const T*>(this);
+                return !(*self == t);
+            }
+
+            inline bool operator<=(const T& t) const noexcept {
+                const T* self = static_cast<const T*>(this);
+                return (*self < t || *self == t);
+            }
+
+            inline bool operator>(const T& t) const noexcept {
+                const T* self = static_cast<const T*>(this);
+                return (!(*self == t) && !(*self < t));
+            }
+
+            inline bool operator>=(const T& t) const noexcept {
+                const T* self = static_cast<const T*>(this);
+                return !(*self < t);
+            }
+        };
+
+        template <class VectorLike, class T>
+        class VectorIterator : public AddRelOps<VectorIterator<VectorLike, T>>,
+        public std::iterator<std::random_access_iterator_tag, T, ptrdiff_t, T*, T&>
+        {
+            public:
+            VectorIterator() = default;
+
+            explicit VectorIterator(VectorLike* container, bool isEnd = false)
+            : _container(container), _pos(isEnd ? container->size() : 0)
+            {}
+
+            VectorIterator(const VectorIterator&) = default;
+            ~VectorIterator() = default;
+            VectorIterator& operator=(const VectorIterator& it) noexcept = default;
+
+            bool operator==(const VectorIterator& rhs) const noexcept {
+                return (_container == rhs._container && _pos == rhs._pos);
+            }
+            bool operator<(const VectorIterator& rhs) const noexcept {
+                return (_pos < rhs._pos);
+            }
+
+            T& operator*()                      { return (*_container)[_pos]; }
+            const T& operator*() const          { return (*_container)[_pos]; }
+            T* operator->()                     { return &(*_container)[_pos]; }
+            const T* operator->() const         { return &(*_container)[_pos]; }
+            T& operator[](size_t i)             { return (*_container)[_pos+i]; }
+            const T& operator[](size_t i) const { return (*_container)[_pos+i]; }
+
+            // Pointer arithmetic. For efficiency reasons we do not check if the resulting
+            // position is valid.
+            VectorIterator& operator++() noexcept {
+                ++_pos;
+                return *this;
+            }
+            VectorIterator operator++(int) noexcept {
+                VectorIterator tmp(*this);
+                operator++();
+                return tmp;
+            }
+            VectorIterator& operator+=(ptrdiff_t n) noexcept {
+                (n >= 0 ? _pos += size_t(n) : _pos -= size_t(-n));
+                return *this;
+            }
+            VectorIterator operator+(ptrdiff_t n) const noexcept {
+                VectorIterator tmp(*this);
+                tmp += n;
+                return tmp;
+            }
+
+            VectorIterator& operator--() noexcept {
+                --_pos;
+                return *this;
+            }
+            VectorIterator& operator-=(ptrdiff_t n) noexcept {
+                (n >= 0 ? _pos -= size_t(n) : _pos += size_t(-n));
+                return *this;
+            }
+            VectorIterator operator-(ptrdiff_t n) const noexcept {
+                VectorIterator tmp(*this);
+                tmp -= n;
+                return tmp;
+            }
+            ptrdiff_t operator-(const VectorIterator& rhs) const noexcept {
+                return ptrdiff_t(_pos >= rhs._pos ? _pos - rhs._pos : -(rhs._pos - _pos));
+            }
+
+            /*!
+             Swap with another iterator.
+             */
+            void swap(VectorIterator& b) noexcept {
+                if (this != &b) {
+                    std::swap(_container, b._container);
+                    std::swap(_pos, b._pos);
+                }
+            }
+
+            private:
+            VectorLike* _container = nullptr;
+            size_t      _pos = 0;
+        };
+
+        template <class VectorLike, class T>
+        inline VectorIterator<VectorLike, T> operator+(ptrdiff_t n,
+                                                       const VectorIterator<VectorLike, T>& c) noexcept
+        {
+            return (c + n);
+        }
+
+        template <class VectorLike, class T>
+        class ConstVectorIterator : public AddRelOps<ConstVectorIterator<VectorLike, T>>,
+            public std::iterator<std::random_access_iterator_tag, T, ptrdiff_t, const T*, const T&>
+        {
+        public:
+            ConstVectorIterator() = default;
+
+            explicit ConstVectorIterator(const VectorLike* container, bool isEnd = false)
+            : _container(container), _pos(isEnd ? container->size() : 0)
+            {}
+
+            ConstVectorIterator(const ConstVectorIterator&) = default;
+            ~ConstVectorIterator() = default;
+            ConstVectorIterator& operator=(const ConstVectorIterator& it) = default;
+
+            bool operator==(const ConstVectorIterator& rhs) const noexcept {
+                return (_container == rhs._container && _pos == rhs._pos);
+            }
+            bool operator<(const ConstVectorIterator& rhs) const noexcept {
+                return (_pos < rhs._pos);
+            }
+
+            const T& operator*() const          { return (*_container)[_pos]; }
+            const T* operator->() const         { return &(*_container)[_pos]; }
+            const T& operator[](size_t i) const { return (*_container)[_pos+i]; }
+
+            ConstVectorIterator& operator++() noexcept {
+                ++_pos;
+                return *this;
+            }
+            ConstVectorIterator operator++(int) noexcept {
+                ConstVectorIterator tmp(*this);
+                operator++();
+                return tmp;
+            }
+            ConstVectorIterator& operator+=(ptrdiff_t n) noexcept {
+                (n >= 0 ? _pos += size_t(n) : _pos -= size_t(-n));
+                return *this;
+            }
+            ConstVectorIterator operator+(ptrdiff_t n) const noexcept {
+                ConstVectorIterator tmp(*this);
+                tmp += n;
+                return tmp;
+            }
+
+            ConstVectorIterator& operator--() noexcept {
+                --_pos;
+                return *this;
+            }
+            ConstVectorIterator operator--(int) noexcept {
+                ConstVectorIterator tmp(_pos);
+                operator--();
+                return tmp;
+            }
+            ConstVectorIterator& operator-=(ptrdiff_t n) noexcept {
+                (n >= 0 ? _pos -= size_t(n) : _pos += size_t(-n));
+                return *this;
+            }
+            ConstVectorIterator operator-(ptrdiff_t n) const noexcept {
+                ConstVectorIterator tmp(*this);
+                tmp -= n;
+                return tmp;
+            }
+            ptrdiff_t operator-(const ConstVectorIterator& rhs) const noexcept {
+                return ptrdiff_t(_pos >= rhs._pos ? _pos - rhs._pos : -(rhs._pos - _pos));
+            }
+
+            /*!
+             Swap with another iterator.
+             */
+            void swap(ConstVectorIterator& b) noexcept {
+                if (this != &b) {
+                    std::swap(_container, b._container);
+                    std::swap(_pos, b._pos);
+                }
+            }
+
+        private:
+            const VectorLike*   _container = nullptr;
+            size_t              _pos = 0;
+        };
+
+        template <class VectorLike, class T>
+        ConstVectorIterator<VectorLike, T> operator+(ptrdiff_t n,
+                                                     const ConstVectorIterator<VectorLike, T>& c) noexcept
+        {
+            return (c + n);
+        }
     }
 
-    // MARK: Vector types
-
-    /** \file
-     Definition of the Vector types.
-     A Vector in our terminology is an ordered array-like object that supports the
-     following methods:
-        - Vector& operator=(const Vector&);
-        - constexpr size_t size() noexcept;
-        - reference operator[] (size_t n);
-        - const_reference operator[] (size_t n);
-
-     The std::array class already fits this description. We provide wrappers to allow
-     raw pointers, std::vector, and std::valarray combined with an std::slice to
-     also work as a Vector.
-
-     We then provide a number of methods that may operator on Vectors.
-     */
-
 
     /*!
-     VectorPtr wraps a raw T* to allow it to be treated as a Vector, provided that it
-     contains at least N values. If not, the result of any Vector operations will be
-     undefined and will probably cause a memory overwrite.
+     A Vector is a vector in the mathematical sense as opposed to an std::vector.
+     It it designed to contain a fixed sized array of numerical values. Internally
+     it consists of a reference to a backing valarray, plus a slice that defines
+     the elements of the vector.
      */
     template <class T, size_t N>
-    class VectorPtr {
-    public:
+    class Vector {
+        public:
         using value_type = T;
         using size_type = size_t;
         using reference = T&;
         using const_reference = const T&;
-
-        /*!
-         Wrap an existing std::vector to act as a Vector<N>.
-         @throws std::invalid_argument if p is null
-         */
-        explicit VectorPtr(T* p) : ptr(p) {
-            if (!p) {
-                throw std::invalid_argument("the pointer must not be null");
-            }
-        }
-
-        ~VectorPtr() = default;
-
-        // Move is allowed, copy is not.
-        VectorPtr(VectorPtr&&) = default;
-        VectorPtr& operator=(VectorPtr&&) = default;
-        VectorPtr(const VectorPtr&) = delete;
-        VectorPtr& operator=(const VectorPtr&) = delete;
-
-        constexpr size_t size() const noexcept                      { return N; }
-        inline reference operator[](size_t n) noexcept              { return ptr[n]; }
-        inline const_reference operator[](size_t n) const noexcept  { return ptr[n]; }
-
-    private:
-        T* ptr = nullptr;
-    };
-
-
-    /*!
-     VectorVec wraps an std::vector to allow it to be treated as a Vector, provided that
-     it is at least of size N. If the underlying vector is resized less than N, the
-     result of any Vector operations will be undefined and will probably cause a memory
-     overwrite.
-     */
-    template <class T, size_t N>
-    class VectorVec : public VectorPtr<T, N> {
-    public:
-        /*!
-         Wrap an existing std::vector to act as a Vector<N>.
-         @throws std::invalid_argument if v.size() is not at least N.
-         */
-        explicit VectorVec(std::vector<T>& v) : VectorPtr<T,N>(v.data()) {
-            if (v.size() < N) {
-                throw std::invalid_argument("vector must have a size of at least N");
-            }
-        }
-
-        ~VectorVec() = default;
-
-        // Move is allowed, copy is not.
-        VectorVec(VectorVec&&) = default;
-        VectorVec& operator=(VectorVec&&) = default;
-        VectorVec(const VectorVec&) = delete;
-        VectorVec& operator=(const VectorVec&) = delete;
-    };
-
-
-    /*!
-     VectorVA wrap an std::valarray to allow it to be treated as a Vector, provided that
-     it is at least of size N. If the underlying valarray is resized less than N, the result
-     of any Vector operations will be undefined and will probably cause a memory overwrite.
-
-     If it is constructed with a slice, then only that portion of the valarray will be
-     considered as the vector. Otherwise the first N items will be used.
-     */
-    template <class T, size_t N>
-    class VectorVA {
-    public:
-        using value_type = T;
-        using size_type = size_t;
-        using reference = T&;
-        using const_reference = const T&;
+        using iterator = _private::VectorIterator<Vector, T>;
+        using const_iterator = _private::ConstVectorIterator<Vector, T>;
 
         /*!
          Wrap an existing std::valarray to act as a Vector<N>.
          @throws std::invalid_argument if v.size() is not at least N.
          */
-        explicit VectorVA(std::valarray<T>& v) : va(v), s(std::slice(0, N, 1)) {
+        explicit Vector(std::valarray<T>& v) : va(v), s(std::slice(0, N, 1)) {
             if (v.size() < N) {
                 throw std::invalid_argument("valarray must have a size of at least N");
             }
@@ -146,7 +278,7 @@ namespace kss { namespace math { namespace la {
          Wrap an existing std::valarray to act as a Vector<N>.
          @throws std::invalid_argument if v.size() is not at least N.
          */
-        explicit VectorVA(std::valarray<T>& v, const std::slice& sl) : va(v), s(sl) {
+        explicit Vector(std::valarray<T>& v, const std::slice& sl) : va(v), s(sl) {
             if (sl.size() != N) {
                 throw std::invalid_argument("slice must be of size N");
             }
@@ -155,17 +287,20 @@ namespace kss { namespace math { namespace la {
             }
         }
 
-        ~VectorVA() = default;
-
-        // Move is allowed, copy is not.
-        VectorVA(VectorVA&&) = default;
-        VectorVA& operator=(VectorVA&&) = default;
-        VectorVA(const VectorVA&) = delete;
-        VectorVA& operator=(const VectorVA&) = delete;
+        ~Vector() = default;
+        Vector(Vector&&) = default;
+        Vector& operator=(Vector&&) = default;
+        Vector(const Vector& v) = default;
+        Vector& operator=(const Vector&) = default;
 
         constexpr size_t size() const noexcept              { return N; }
         reference operator[](size_t n) noexcept             { return va[index(n)]; }
         const_reference operator[](size_t n) const noexcept { return va[index(n)]; }
+
+        iterator begin() noexcept               { return iterator(this); }
+        iterator end() noexcept                 { return iterator(this, true); }
+        const_iterator begin() const noexcept   { return const_iterator(this); }
+        const_iterator end() const noexcept     { return const_iterator(this, true); }
 
     private:
         std::valarray<T>&   va;
@@ -177,48 +312,25 @@ namespace kss { namespace math { namespace la {
         }
     };
 
-    // MARK: Vector operations
+    // MARK: Operations on generic VectorLike objects.
 
-    /*!
-     Return true if two vectors have the same elements.
-     */
     template <template<class, size_t> class Vec1, template<class, size_t> class Vec2, class T, size_t N>
-    bool operator==(const Vec1<T, N>& v1, const Vec2<T, N>& v2) noexcept {
-        for (size_t i = 0; i < N; ++i) {
-            if (v1[i] != v2[i]) {
-                return false;
-            }
-        }
-        return true;
+    inline bool equal(const Vec1<T, N>& a, const Vec2<T, N>& b) noexcept {
+        return std::equal(a.begin(), a.end(), b.begin());
     }
 
-    /*!
-     Returns true if two vectors have at least one element that differs.
-     */
     template <template<class, size_t> class Vec1, template<class, size_t> class Vec2, class T, size_t N>
-    inline bool operator!=(const Vec1<T, N>& v1, const Vec2<T, N>& v2) noexcept {
-        return !operator==(v1, v2);
+    inline bool operator==(const Vec1<T, N>& a, const Vec2<T, N>& b) noexcept {
+        return std::equal(a.begin(), a.end(), b.begin());
     }
 
-    /*!
-     Returns a string representation of a vector. This is intended primarily for debugging
-     purposes.
-     */
-    template <template<class, size_t> class Vector, class T, size_t N>
-    std::string toString(const Vector<T, N>& v) {
-        std::ostringstream str;
-        str << "(";
-        if (N > 0) {
-            str << v[0];
-            for (size_t i = 1; i < N; ++i) {
-                str << ',' << v[i];
-            }
-        }
-        str << ")";
-        return str.str();
+    template <template<class, size_t> class Vec1, template<class, size_t> class Vec2, class T, size_t N>
+    inline bool operator!=(const Vec1<T, N>& a, const Vec2<T, N>& b) noexcept {
+        return !std::equal(a.begin(), a.end(), b.begin());
     }
 
     // Arithmetic operators on vectors - addition
+
     template <template<class, size_t> class Vector, class T, size_t N>
     Vector<T, N>& operator+=(Vector<T, N>& v, const T& t) noexcept {
         for (size_t i = 0; i < N; ++i) {
@@ -236,15 +348,16 @@ namespace kss { namespace math { namespace la {
     }
 
     template <template<class, size_t> class Vec1, template<class, size_t> class Vec2, class T, size_t N>
-    std::array<T, N> operator+(const Vec1<T, N>& v1, const Vec2<T, N>& v2) noexcept {
-        std::array<T, N> a;
+    std::array<T, N> operator+(const Vec1<T, N>& a, const Vec2<T, N>& b) noexcept {
+        std::array<T, N> ret;
         for (size_t i = 0; i < N; ++i) {
-            a[i] = v1[i] + v2[i];
+            ret[i] = a[i] + b[i];
         }
-        return a;
+        return ret;
     }
 
     // Arithmetic operators on vectors - subtraction
+
     template <template<class, size_t> class Vector, class T, size_t N>
     Vector<T, N>& operator-=(Vector<T, N>& v, const T& t) noexcept {
         for (size_t i = 0; i < N; ++i) {
@@ -271,6 +384,7 @@ namespace kss { namespace math { namespace la {
     }
 
     // Arithmetic operators on vectors - multiplication
+
     template <template<class, size_t> class Vector, class T, size_t N>
     Vector<T, N>& operator*=(Vector<T, N>& v, const T& t) noexcept {
         for (size_t i = 0; i < N; ++i) {
@@ -296,8 +410,8 @@ namespace kss { namespace math { namespace la {
         return a;
     }
 
-
     // Arithmetic operators on vectors - division
+
     template <template<class, size_t> class Vector, class T, size_t N>
     Vector<T, N>& operator/=(Vector<T, N>& v, const T& t) noexcept {
         for (size_t i = 0; i < N; ++i) {
@@ -324,6 +438,24 @@ namespace kss { namespace math { namespace la {
     }
 
     // MARK: Additional Vector related methods
+
+    /*!
+     Returns a string representation of a vector. This is intended primarily for debugging
+     purposes.
+     */
+    template <template<class, size_t> class Vector, class T, size_t N>
+    std::string toString(const Vector<T, N>& v) {
+        std::ostringstream str;
+        str << "(";
+        if (N > 0) {
+            str << v[0];
+            for (size_t i = 1; i < N; ++i) {
+                str << ',' << v[i];
+            }
+        }
+        str << ")";
+        return str.str();
+    }
 
     /*!
      Perform a sum of the values of a given Vector, but accumulating to another, presumably

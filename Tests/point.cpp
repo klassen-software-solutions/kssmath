@@ -80,6 +80,7 @@ namespace {
             point_t p2(std::move(p1));
             return (p2 == p);
         }));
+
         {
             // Close to computations.
             T rawvalues1[] = { 0, 1, 2, 3 };
@@ -92,10 +93,34 @@ namespace {
             KSS_ASSERT(areClose<T>(p1, p2, 2));
             KSS_ASSERT(!areClose<T>(p1, p3, 2));
         }
+
+        // Construct from array test.
+        KSS_ASSERT(isTrue([] {
+            array<T, DIM> ar;
+            for (size_t i = 0; i < DIM; ++i) {
+                ar[i] = T(i);
+            }
+
+            point_t p(ar);
+            return (p.values() == ar);
+        }));
+
+        KSS_ASSERT(isTrue([] {
+            array<T, DIM> ar;
+            for (size_t i = 0; i < DIM; ++i) {
+                ar[i] = T(i);
+            }
+
+            point_t p(move(ar));
+            for (size_t i = 0; i < DIM; ++i) {
+                if (p.values()[i] != i) {
+                    return false;
+                }
+            }
+            return true;
+        }));
     }
 }
-
-
 
 static TestSuite ts("geom::point", {
     make_pair("Point<int, 2>", test_point_instance<int, 2>),

@@ -14,6 +14,8 @@
 		AA2E5461226827F900FEC8B7 /* constants.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AA2E5460226827F900FEC8B7 /* constants.hpp */; };
 		AA2E5463226828FF00FEC8B7 /* radians.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2E5462226828FF00FEC8B7 /* radians.cpp */; };
 		AAA4B43D227008E800143964 /* ksstest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA4B43B227008E800143964 /* ksstest.cpp */; };
+		AAA4B43F227118A400143964 /* vautil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA4B43E227118A400143964 /* vautil.cpp */; };
+		AAA4B44122715CFE00143964 /* line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA4B44022715CFE00143964 /* line.cpp */; };
 		AABC1C342256FE30004C26BD /* vector.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AABC1C322256FE30004C26BD /* vector.hpp */; };
 		AABC1C36225709A3004C26BD /* vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABC1C35225709A3004C26BD /* vector.cpp */; };
 		AACAA74A22542B050005F45E /* version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AACAA74522542B050005F45E /* version.cpp */; };
@@ -62,6 +64,8 @@
 		AA2E5462226828FF00FEC8B7 /* radians.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = radians.cpp; sourceTree = "<group>"; };
 		AAA4B43B227008E800143964 /* ksstest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ksstest.cpp; sourceTree = "<group>"; };
 		AAA4B43C227008E800143964 /* ksstest.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ksstest.hpp; sourceTree = "<group>"; };
+		AAA4B43E227118A400143964 /* vautil.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vautil.cpp; sourceTree = "<group>"; };
+		AAA4B44022715CFE00143964 /* line.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = line.cpp; sourceTree = "<group>"; };
 		AABC1C322256FE30004C26BD /* vector.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vector.hpp; sourceTree = "<group>"; };
 		AABC1C35225709A3004C26BD /* vector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vector.cpp; sourceTree = "<group>"; };
 		AACAA72E2254260B0005F45E /* libkssmath.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libkssmath.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,9 +178,11 @@
 				AACAA76C22542EA40005F45E /* gcd.cpp */,
 				AAA4B43B227008E800143964 /* ksstest.cpp */,
 				AAA4B43C227008E800143964 /* ksstest.hpp */,
+				AAA4B44022715CFE00143964 /* line.cpp */,
 				AACAA76222542C5D0005F45E /* main.cpp */,
 				AA2E545822681F3400FEC8B7 /* point.cpp */,
 				AA2E5462226828FF00FEC8B7 /* radians.cpp */,
+				AAA4B43E227118A400143964 /* vautil.cpp */,
 				AABC1C35225709A3004C26BD /* vector.cpp */,
 				AACAA75D22542BFF0005F45E /* version.cpp */,
 			);
@@ -316,6 +322,8 @@
 				AA2E5463226828FF00FEC8B7 /* radians.cpp in Sources */,
 				AACAA75E22542BFF0005F45E /* version.cpp in Sources */,
 				AABC1C36225709A3004C26BD /* vector.cpp in Sources */,
+				AAA4B44122715CFE00143964 /* line.cpp in Sources */,
+				AAA4B43F227118A400143964 /* vautil.cpp in Sources */,
 				AA2E545D2268238C00FEC8B7 /* closeto.cpp in Sources */,
 				AACAA76D22542EA40005F45E /* gcd.cpp in Sources */,
 				AAA4B43D227008E800143964 /* ksstest.cpp in Sources */,
