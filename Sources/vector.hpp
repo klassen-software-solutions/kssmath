@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <array>
 #include <iterator>
+#include <sstream>
 #include <stdexcept>
 #include <valarray>
 
