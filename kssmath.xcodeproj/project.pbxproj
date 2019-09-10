@@ -16,6 +16,8 @@
 		AA78529C22A0040E00E76073 /* geospatial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA78529A22A0040E00E76073 /* geospatial.cpp */; };
 		AA78529D22A0040E00E76073 /* geospatial.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AA78529B22A0040E00E76073 /* geospatial.hpp */; };
 		AA78529F22A03BB400E76073 /* geospatial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA78529E22A03BB300E76073 /* geospatial.cpp */; };
+		AA7852A222A0855B00E76073 /* minimum.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AA7852A022A0855B00E76073 /* minimum.hpp */; };
+		AA7852A322A0855B00E76073 /* minimum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA7852A122A0855B00E76073 /* minimum.cpp */; };
 		AAA4B43D227008E800143964 /* ksstest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA4B43B227008E800143964 /* ksstest.cpp */; };
 		AAA4B43F227118A400143964 /* vautil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA4B43E227118A400143964 /* vautil.cpp */; };
 		AAA4B44122715CFE00143964 /* line.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA4B44022715CFE00143964 /* line.cpp */; };
@@ -68,6 +70,8 @@
 		AA78529A22A0040E00E76073 /* geospatial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = geospatial.cpp; sourceTree = "<group>"; };
 		AA78529B22A0040E00E76073 /* geospatial.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = geospatial.hpp; sourceTree = "<group>"; };
 		AA78529E22A03BB300E76073 /* geospatial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = geospatial.cpp; sourceTree = "<group>"; };
+		AA7852A022A0855B00E76073 /* minimum.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minimum.hpp; sourceTree = "<group>"; };
+		AA7852A122A0855B00E76073 /* minimum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = minimum.cpp; sourceTree = "<group>"; };
 		AAA4B43B227008E800143964 /* ksstest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ksstest.cpp; sourceTree = "<group>"; };
 		AAA4B43C227008E800143964 /* ksstest.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ksstest.hpp; sourceTree = "<group>"; };
 		AAA4B43E227118A400143964 /* vautil.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vautil.cpp; sourceTree = "<group>"; };
@@ -162,6 +166,8 @@
 				AA78529A22A0040E00E76073 /* geospatial.cpp */,
 				AA78529B22A0040E00E76073 /* geospatial.hpp */,
 				AAEDED4E2269805E00383C7F /* line.hpp */,
+				AA7852A122A0855B00E76073 /* minimum.cpp */,
+				AA7852A022A0855B00E76073 /* minimum.hpp */,
 				AACAA76E2254473E0005F45E /* point.hpp */,
 				AA2E545E2268279E00FEC8B7 /* radians.hpp */,
 				AAEDED50226BA3A100383C7F /* vautil.hpp */,
@@ -216,6 +222,7 @@
 				AACAA74B22542B050005F45E /* version.hpp in Headers */,
 				AA2E545F2268279E00FEC8B7 /* radians.hpp in Headers */,
 				AACAA76622542D3E0005F45E /* gcd.hpp in Headers */,
+				AA7852A222A0855B00E76073 /* minimum.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +329,7 @@
 				AA78529C22A0040E00E76073 /* geospatial.cpp in Sources */,
 				AACAA76722542D3E0005F45E /* gcd.cpp in Sources */,
 				AACAA74A22542B050005F45E /* version.cpp in Sources */,
+				AA7852A322A0855B00E76073 /* minimum.cpp in Sources */,
 				AACAA76B22542D560005F45E /* _contract.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
