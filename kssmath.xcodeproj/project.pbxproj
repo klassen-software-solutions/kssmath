@@ -271,7 +271,7 @@
 		AACAA7262254260B0005F45E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = "Klassen Software Solutions";
 				TargetAttributes = {
 					AACAA72D2254260B0005F45E = {
@@ -288,6 +288,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = AACAA7252254260B0005F45E;
 			productRefGroup = AACAA72F2254260B0005F45E /* Products */;
@@ -506,6 +507,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 23FN26LWBV;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/.build/Darwin-x86_64/include";
@@ -517,6 +519,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 23FN26LWBV;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/.build/Darwin-x86_64/include";
